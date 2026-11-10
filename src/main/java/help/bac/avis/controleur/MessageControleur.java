@@ -49,6 +49,7 @@ public class MessageControleur {
         this.messageRepository.save(newMessage);
 
         simpMessagingTemplate.convertAndSend("/conversation/" + conversation.getId(), newMessage);
+        simpMessagingTemplate.convertAndSend("/ticket/" + conversation.getTicket_id(), newMessage);
         simpMessagingTemplate.convertAndSendToUser(message.receiver(), "/private", newMessage);
 
         return newMessage;

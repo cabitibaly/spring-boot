@@ -71,6 +71,7 @@ public class ConfigurationSecuriteApplication {
                                                     .requestMatchers(HttpMethod.GET,"/telecharger").permitAll()
                                                     .requestMatchers("/ws").permitAll()
                                                     .requestMatchers("/ws/**", "/ws/socket", "/ws/success").permitAll()
+                                                    .requestMatchers(HttpMethod.GET, "/diagnostic/{composant}").permitAll()
                                                     .requestMatchers(HttpMethod.GET, "/utilisateurs/donnees").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR") // On autorise l'accès à l'endpoint /utilisateurs/donnees seulement pour les utilisateurs ayant le role ADMINISTRATEUR
                                                     .requestMatchers(HttpMethod.POST, "/tickets/creer-un-ticket").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR") // On autorise l'accès à l'endpoint /tickets/creer-un-ticket seulement pour les utilisateurs ayant le role ADMINISTRATEUR
                                                     .requestMatchers(HttpMethod.GET, "/tickets/tous-les-tickets").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMINISTRATEUR", "ROLE_UTILISATEUR") // On autorise l'accès à l'endpoint /tickets/creer-un-ticket seulement pour les utilisateurs ayant le role ADMINISTRATEUR
@@ -83,8 +84,7 @@ public class ConfigurationSecuriteApplication {
                             ) // Une session pour l'authentification de l'utilisateur car spring fonctionne en session
                             .sessionManagement(httpSecuritySessionManagementConfigurer ->
                                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // On verifie le token chaque fois qu'une requête est faite
-
-                                    )
+                            )
                             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                             .build();
     }

@@ -35,7 +35,7 @@ public class AvisUtilisateursApplication implements CommandLineRunner { // Pour 
 				)
 				.build();
 
-		admin =this.utilisateurRepository.findByEmail("admin@konoha.jp").orElse(admin);
+		admin = this.utilisateurRepository.findByEmail("admin@konoha.jp").orElse(admin);
 		this.utilisateurRepository.save(admin);
 		Utilisateur manager = Utilisateur.builder()
 				.actif(true)

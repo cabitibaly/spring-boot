@@ -39,9 +39,9 @@ public class PdfService {
     public Map generatePdf(String template) throws MessagingException, IOException {
         // Configuration cloudinary
         Map<String, String> config = new HashMap<>();
-        config.put("cloud_name", System.getenv("cloud_name"));
-        config.put("api_key", System.getenv("api_key"));
-        config.put("api_secret", System.getenv("api_secret"));
+        config.put("cloud_name", System.getenv("CLOUD_NAME"));
+        config.put("api_key", System.getenv("API_KEY"));
+        config.put("api_secret", System.getenv("API_SECRET"));
         Cloudinary cloudinary = new Cloudinary(config);
 
         // Definition du contexte

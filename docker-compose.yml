@@ -1,0 +1,68 @@
+services:
+
+  db:
+    container_name: avis-db
+    image: postgres:16-alpine3.23
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: avis_utilisateurs
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - avis-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U \"$${SPRING_DATASOURCE_USERNAME}\" -d avis_utilisateurs" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: avis-backend
+    restart: unless-stopped
+    ports:
+      - 9191:9191
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - CLOUD_NAME=${CLOUD_NAME}
+      - API_KEY=${API_KEY}
+      - API_SECRET=${API_SECRET}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - avis-network
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 7080:8080
+    networks:
+      - avis-network
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+        # Change the number before : to the port the web interface should be accessible on
+      - 9082:80
+        # Change the number before : to the port the SMTP server should be accessible on
+      - 9030:25
+    networks:
+      - avis-network
+volumes:
+    db-data:
+
+networks:
+    avis-network:
+      driver: bridge

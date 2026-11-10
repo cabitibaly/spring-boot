@@ -35,7 +35,7 @@ public class JwtService {
 
     public static final String BEARER = "bearer";
     public static final String REFRESH = "refresh";
-    private final String ENCRYPTION_KEY = "92804f57bc0169e8291b008e786251fbd6c5a289e8824bfaebd61f836301ec0c"; // Clé de chiffrement
+    private final String ENCRYPTION_KEY = System.getenv("ENCRYPTION_KEY"); // Clé de chiffrement
     private UtilisateurService utilisateurService;
     private JwtRepository jwtRepository;
 
